@@ -1,0 +1,50 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/wait.h>
+
+int main() {
+    char input[1024];           // Buffer for user input
+    char *args[64];             // Array to hold command arguments
+    char *token;                // Pointer for tokenizing strings
+
+    while (1) {                 // 1. The Loop (REPL)
+        printf("thinsh> ");    // Print prompt
+        
+        // 2. Read Input
+        if (fgets(input, sizeof(input), stdin) == NULL) break;
+        
+        // Remove the newline character at the end
+        input[strcspn(input, "\n")] = 0;
+
+        // 3. Parse Input (Split by space)
+        int i = 0;
+        token = strtok(input, " ");
+        while (token != NULL) {
+            args[i++] = token;
+            token = strtok(NULL, " ");
+        }
+        args[i] = NULL; // Arguments list must end with NULL
+
+        if (args[0] == NULL) continue; // Handle empty lines
+
+        // 4. Execute Command (Fork/Exec/Wait)
+        pid_t pid = fork();
+
+        if (pid == 0) {
+            // CHILD PROCESS: Become the new program
+            // execvp looks for the command in your $PATH
+            if (execvp(args[0], args) == -1) {
+                perror("Command failed");
+            }
+            exit(1);
+        } else if (pid > 0) {
+            // PARENT PROCESS: Wait for child to finish
+            wait(NULL);
+        } else {
+            perror("Fork failed");
+        }
+    }
+    return 0;
+}
