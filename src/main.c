@@ -25,9 +25,14 @@ int main() {
             argv[++i] = strtok(NULL, " ");
         }
 
-        // Handle "exit" command directly (Basic Built-in)
+        // Handle "exit" command directly
         if (argv[0] && strcmp(argv[0], "exit") == 0) {
             break;
+        }
+
+        // chdir
+        else if (argv[0] && strcmp(argv[0], "cd") == 0){
+            //builtins.c
         }
 
         // 3. EXECUTE
