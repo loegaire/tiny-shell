@@ -1,4 +1,4 @@
-#include "shell.h"  // Use quotes for local headers
+#include "../include/shell.h" // Use quotes for local headers
 
 int main() {
     char line[MAX_LINE];
