@@ -1,2 +1,16 @@
+# --- Emacs Backup & Auto-save files ---
 *~
+\#*\#
+.#*
+flycheck_*
 
+# --- C Build Artifacts ---
+*.o
+*.out
+thinsh
+
+# --- Local Scripts (Do not upload) ---
+push.sh
+
+# --- System/Other ---
+.DS_Store
