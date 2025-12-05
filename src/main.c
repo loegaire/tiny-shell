@@ -4,6 +4,8 @@ int main() {
     char line[MAX_LINE];
     char *argv[MAX_ARGS];
 
+    setup_signals();
+
     while (1) {
         printf("thinsh> ");
         if (!fgets(line, sizeof(line), stdin)) break;

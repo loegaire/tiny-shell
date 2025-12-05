@@ -37,4 +37,6 @@ int exec_builtin(char **args);
 int set_env(char **args);    // Handles 'set' command
 int shell_exit(char **args); // Handles 'exit' command
 
+void setup_signals();
+
 #endif
