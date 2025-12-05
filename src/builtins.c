@@ -9,6 +9,19 @@ int builtin_exit(char **args) {
     return 0; // Unreachable, but keeps compiler happy
 }
 
+int builtin_help(char **args){
+    printf("--- thinsh Help ---\n");
+    printf("dir       : List files (ls -al)\n");
+    printf("date      : Show time/date\n");
+    printf("history   : List past commands\n");
+    printf("path      : Show current PATH\n");
+    printf("addpath X : Add X to PATH\n");
+    printf("exit      : Quit shell\n");
+    printf("command & : Run in background\n");
+    printf("Note: Use standard Linux commands (ps, kill) for process management.\n");
+    return 1;
+}
+
 // --- THE LOOKUP TABLE ---
 // Register new commands here!
 BuiltinCmd builtins[] = {
@@ -16,6 +29,7 @@ BuiltinCmd builtins[] = {
     // We can use set_env directly because it now fits the "int func(char**)" shape!
     {"set",  set_env},      
     {"exit", builtin_exit},
+    {"help", builtin_help},
     {NULL, NULL} // Terminator
 };
 
