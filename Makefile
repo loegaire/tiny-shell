@@ -6,7 +6,7 @@ TARGET = thinsh
 
 # Source files
 # Update this line when you add new files (e.g., src/feature_vars.c)
-SRCS = src/main.c src/vars.c src/builtins.c
+SRCS = src/main.c src/vars.c src/builtins.c src/sig.c
 
 # Object files (automatically converts .c to .o in the list)
 OBJS = $(SRCS:.c=.o)
