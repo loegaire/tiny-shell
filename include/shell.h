@@ -38,5 +38,6 @@ int set_env(char **args);    // Handles 'set' command
 int shell_exit(char **args); // Handles 'exit' command
 int get_env(char **args);    // Handles 'get' command
 void setup_signals();
+int job_exec(char **args);
 
 #endif
