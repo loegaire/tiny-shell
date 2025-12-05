@@ -1,4 +1,5 @@
 #include "../include/shell.h"
+#include <stdlib.h>
 
 int job_exec(char **args){
     int bg=0;
@@ -8,10 +9,11 @@ int job_exec(char **args){
             args[i]=NULL;
         }
     }
-    if(args[0]==NULL) return -1;
+    if(args[0]==NULL) return 1;
+
     int pid=fork();
     if(pid<0){
-        printf("Fork không thành công (hết memory?)");
+        perror("Fork không thành công (hết memory?)");
         return -1;
     }
     if(pid==0){
@@ -19,8 +21,12 @@ int job_exec(char **args){
         exit(1);
     }
     else{
+        int status;
         if(bg==0){
-            wait(NULL);
+            waitpid(pid, &status, WUNTRACED);
+            if(WIFSTOPPED(status)){
+                printf("\nProcess %d stopped\n",pid);
+            }
         }
         else{
             printf("%d",pid);
