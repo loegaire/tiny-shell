@@ -36,7 +36,7 @@ int exec_builtin(char **args);
 // Feature Functions (Public interfaces matching the builtin_func signature)
 int set_env(char **args);    // Handles 'set' command
 int shell_exit(char **args); // Handles 'exit' command
-
+int get_env(char **args);    // Handles 'get' command
 void setup_signals();
 
 #endif

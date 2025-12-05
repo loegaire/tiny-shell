@@ -39,6 +39,7 @@ BuiltinCmd builtins[] = {
     {"exit", builtin_exit},
     {"help", builtin_help},
     {"cd", builtin_cd},
+    {"get",  get_env},
     {NULL, NULL} 
 };
 
