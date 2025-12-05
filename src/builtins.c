@@ -22,6 +22,16 @@ int builtin_help(char **args){
     return 1;
 }
 
+int builtin_cd(char **args){
+    char *target=NULL;
+    if(args[1]==NULL){
+        target=getenv("HOME");
+    } 
+    else target=args[1]; 
+    chdir(target);
+    return 1;
+}
+
 // --- THE LOOKUP TABLE ---
 // Register new commands here!
 BuiltinCmd builtins[] = {
@@ -30,6 +40,7 @@ BuiltinCmd builtins[] = {
     {"set",  set_env},      
     {"exit", builtin_exit},
     {"help", builtin_help},
+    {"cd", builtin_cd},
     {NULL, NULL} // Terminator
 };
 
