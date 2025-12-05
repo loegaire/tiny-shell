@@ -10,14 +10,14 @@ int builtin_exit(char **args) {
 
 int builtin_help(char **args){
     printf("--- thinsh Help ---\n");
-    printf("dir       : List files (ls -al)\n");
-    printf("date      : Show time/date\n");
-    printf("history   : List past commands\n");
-    printf("path      : Show current PATH\n");
-    printf("addpath X : Add X to PATH\n");
-    printf("exit      : Quit shell\n");
-    printf("command & : Run in background\n");
-    printf("Note: Use standard Linux commands (ps, kill) for process management.\n");
+    printf("dir/ls    : Xem danh sách các file/directories trong directory hiện tại.\n");
+    printf("date      : Xem ngày-tháng-năm-giờ.\n");
+    printf("history   : Xem lịch sử các lệnh.\n");
+    printf("path      : Xem vị trí directory hiện tại.\n");
+    printf("addpath X : Thêm  X vào  PATH.\n");
+    printf("exit      : Thoát khỏi thinsh.\n");
+    printf("command & : Chạy 1 chương trình trong nền.\n");
+    printf("Lưu ý     : Dùng các lệnh có sẵn của Linux (ps, kill,...) để xem danh sách tiến trình, hủy tiến trình,...\n");
     return 1;
 }
 
