@@ -11,6 +11,7 @@
 #include <sys/types.h>
 #include <fcntl.h>   // For file operations
 #include <signal.h>  // For signal handling
+#include <stdint.h>
 
 // --- Constants ---
 #define MAX_LINE 256
