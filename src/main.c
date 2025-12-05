@@ -25,14 +25,7 @@ int main() {
         }
 
         // 2. Not a builtin? Fork and Exec
-        pid_t pid = fork();
-        if (pid == 0) {
-            execvp(argv[0], argv);
-            perror("Command failed");
-            exit(1);
-        } else {
-            wait(NULL);
-        }
+        job_exec(argv); 
     }
     return 0;
 }
