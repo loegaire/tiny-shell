@@ -2,7 +2,6 @@
 
 // --- Wrappers ---
 
-// We still need a wrapper for exit because the standard exit() 
 // takes an int, but our table expects a function taking (char**)
 int builtin_exit(char **args) {
     exit(0);
@@ -36,12 +35,11 @@ int builtin_cd(char **args){
 // Register new commands here!
 BuiltinCmd builtins[] = {
     // NAME    FUNCTION
-    // We can use set_env directly because it now fits the "int func(char**)" shape!
     {"set",  set_env},      
     {"exit", builtin_exit},
     {"help", builtin_help},
     {"cd", builtin_cd},
-    {NULL, NULL} // Terminator
+    {NULL, NULL} 
 };
 
 // --- THE DISPATCHER ---
