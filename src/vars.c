@@ -8,7 +8,7 @@ int set_env(char **args) {
     }
     char *name = args[1];
     char *value = args[2];
-    FILE* fp = fopen("/tmp/test.txt", "a");
+    FILE* fp = fopen("env.txt", "a");
     if (!fp) {
         perror("khong mo duoc file!:<");
         return is_ok;
