@@ -1,5 +1,4 @@
 #include "../include/shell.h"
-#include <stdlib.h>
 
 int job_exec(char **args){
     int bg=0;
@@ -17,6 +16,7 @@ int job_exec(char **args){
         return -1;
     }
     if(pid==0){
+        signal(SIGTSTP, SIG_DFL);
         execvp(args[0], args);
         exit(1);
     }
