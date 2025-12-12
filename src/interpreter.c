@@ -128,7 +128,6 @@ void OP_IN(MAY_AO *vm) {
   int value = pop(vm);
   printf("%d\n", value);
 }
-void OP_DUNG(MAY_AO *vm) { return; }
 void OP_VAO_TRANG(MAY_AO *vm) {
   if (vm->is_in_trang ) {
     printf("Loi: Khong ho tro 'trang' long nhau!\n");
@@ -196,7 +195,7 @@ void run(MAY_AO *vm) {
       OP_IN(vm);
       break;
     case DUNG:
-      OP_DUNG(vm);
+      return;
       break;
     case VAO_TRANG:
       OP_VAO_TRANG(vm);
@@ -209,4 +208,32 @@ void run(MAY_AO *vm) {
       exit(1);
     }
   }
+}
+int main() {
+    printf("--- KHOI TAO MAY AO ---\n");
+
+    // 1. Khởi tạo chương trình
+    CHUONG_TRINH prog;
+    init_CHUONG_TRINH(&prog);
+
+    // 2. Load code từ file "code.txt"
+    // Lưu ý: Đảm bảo file code.txt nằm cùng thư mục khi chạy
+    load_program(&prog, "code.txt");
+    printf("-> Da load %d lenh.\n", prog.code_size);
+
+    // 3. Khởi tạo VM và nạp chương trình vào
+    MAY_AO vm;
+    init_MAY_AO(&vm, &prog);
+
+    // 4. Chạy
+    printf("--- KET QUA CHAY ---\n");
+    run(&vm);
+    
+    printf("--- KET THUC ---\n");
+
+    // 5. Dọn dẹp bộ nhớ (tốt cho thói quen)
+    if (prog.code) free(prog.code);
+    if (prog.constants) free(prog.constants);
+
+    return 0;
 }

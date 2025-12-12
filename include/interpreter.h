@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <ctype.h>
 enum opcode {
   CONG,
   TRU,
@@ -44,4 +45,10 @@ typedef struct {
   int backup_vars[1024];
   int is_in_trang;
 } MAY_AO;
+void init_CHUONG_TRINH(CHUONG_TRINH *program);
+void init_MAY_AO(MAY_AO *vm, CHUONG_TRINH *program);
 void add_instruction(CHUONG_TRINH *program, uint8_t opcode, int operand);
+void add_constant(CHUONG_TRINH *program, int value);
+int get_constant(CHUONG_TRINH *program, int index);
+void run(MAY_AO *vm);
+void load_program(CHUONG_TRINH *program, const char *filename) ;

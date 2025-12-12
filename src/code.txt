@@ -1,9 +1,20 @@
+# 1. Khởi tạo x = 10 ở bên ngoài
 NAP 10
 CAT 0
-NAP 20
-CAT 1
+
+# 2. Vào vùng cách ly
+VAO_TRANG
+    # Trong này ta sửa x thành 999
+    NAP 999
+    CAT 0
+    
+    # In ra x trong trang (Phải là 999)
+    LAY 0
+    IN
+RA_TRANG
+
+# 3. Ra ngoài
+# Nếu logic đúng, x phải quay về 10 (số 999 bị hủy)
 LAY 0
-LAY 1
-CONG
 IN
 DUNG
