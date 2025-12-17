@@ -12,6 +12,8 @@
 #include <fcntl.h>   // For file operations
 #include <signal.h>  // For signal handling
 #include <stdint.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 
 // --- Constants ---
 #define MAX_LINE 256

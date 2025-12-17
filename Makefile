@@ -13,7 +13,7 @@ OBJS = $(SRCS:.c=.o)
 
 # Default rule: build the executable
 $(TARGET): $(OBJS)
-	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS)
+	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS) -lreadline
 
 # Rule to compile .c to .o
 %.o: %.c

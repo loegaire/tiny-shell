@@ -1,4 +1,5 @@
 #include "../include/shell.h"
+#include <readline/history.h>
 
 // --- Wrappers ---
 
@@ -31,6 +32,15 @@ int builtin_cd(char **args){
     return 1;
 }
 
+int builtin_history(char **args){
+    HIST_ENTRY **list = history_list();
+    if(list==NULL) return -1;
+    for(int i=0;list[i]!=NULL;i++){
+        printf("%d %s\n",i,list[i]->line);
+    }
+    return 1;
+}
+
 // --- THE LOOKUP TABLE ---
 // Register new commands here!
 BuiltinCmd builtins[] = {
@@ -40,6 +50,7 @@ BuiltinCmd builtins[] = {
     {"help", builtin_help},
     {"cd", builtin_cd},
     {"get",  get_env},
+    {"history", builtin_history},
     {NULL, NULL} 
 };
 
