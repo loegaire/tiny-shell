@@ -11,7 +11,7 @@ int builtin_exit(char **args) {
 
 int builtin_help(char **args){
     printf("--- thinsh Help ---\n");
-    printf("dir/ls       : In ra danh sách các file và directories trong directory hiện tại.\n");
+    printf("dir/ls    : In ra danh sách các file và directories trong directory hiện tại.\n");
     printf("date      : In ra ngày-tháng-năm-giờ hiện tại.\n");
     printf("history   : In ra lịch sử các câu lệnh.\n");
     printf("path      : Hiên thị PATH hiện tại.\n");
