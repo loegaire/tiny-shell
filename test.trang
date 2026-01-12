@@ -1,0 +1,21 @@
+i = 0
+x = 10
+sum = 0
+
+khi i < 50 thi
+date #in output cua date ra 50 lan
+in i
+
+y = trang
+    x = 50
+    neu x > 20 thi x + 1 het
+het
+
+in y
+in x
+
+sum = sum + y;
+i = i + 1;
+het
+
+in sum

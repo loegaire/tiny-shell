@@ -32,6 +32,11 @@ typedef struct {
   int *constants;
   int constants_size;
   int constants_capacity;
+
+  // NEW: command table for "run external command" statements (e.g., `date`)
+  char **cmds;
+  int cmds_size;
+  int cmds_capacity;
 } CHUONG_TRINH;
 
 typedef struct {
@@ -52,3 +57,9 @@ void add_constant(CHUONG_TRINH *program, int value);
 int get_constant(CHUONG_TRINH *program, int index);
 void run(MAY_AO *vm);
 void load_program(CHUONG_TRINH *program, const char *filename) ;
+
+// Trang compiler (implemented in src/compiler.c)
+void compile(CHUONG_TRINH *program, const char *source);
+
+// NEW: add a command string to program->cmds and return its index
+int add_command(CHUONG_TRINH *program, const char *start, int length);

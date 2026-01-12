@@ -1,5 +1,8 @@
 #include "../include/interpreter.h"
 #include "../include/shell.h"
+#include <string.h>
+#include <stdlib.h>
+
 void init_CHUONG_TRINH(CHUONG_TRINH *program) {
   program->code = NULL;
   program->code_size = 0;
@@ -7,13 +10,50 @@ void init_CHUONG_TRINH(CHUONG_TRINH *program) {
   program->constants = NULL;
   program->constants_size = 0;
   program->constants_capacity = 0;
+
+  // NEW
+  program->cmds = NULL;
+  program->cmds_size = 0;
+  program->cmds_capacity = 0;
 }
+
+// NEW
+int add_command(CHUONG_TRINH *program, const char *start, int length) {
+  if (length <= 0) return -1;
+
+  if (program->cmds_size >= program->cmds_capacity) {
+    program->cmds_capacity = program->cmds_capacity == 0 ? 4 : program->cmds_capacity * 2;
+    program->cmds = realloc(program->cmds, program->cmds_capacity * sizeof(char *));
+    if (!program->cmds) {
+      perror("add_command: realloc");
+      exit(1);
+    }
+  }
+
+  char *s = (char *)malloc((size_t)length + 1);
+  if (!s) {
+    perror("add_command: malloc");
+    exit(1);
+  }
+  memcpy(s, start, (size_t)length);
+  s[length] = '\0';
+
+  program->cmds[program->cmds_size] = s;
+  return program->cmds_size++;
+}
+
 void init_MAY_AO(MAY_AO *vm, CHUONG_TRINH *program) {
   vm->program = program;
   vm->pc = 0;
   vm->sp = 0;
   vm->is_in_trang = 0;
   vm->backup_sp = 0;
+
+  // Ensure deterministic state: undefined vars become 0
+  memset(vm->stack, 0, sizeof(vm->stack));
+  memset(vm->backup_stack, 0, sizeof(vm->backup_stack));
+  memset(vm->vars, 0, sizeof(vm->vars));
+  memset(vm->backup_vars, 0, sizeof(vm->backup_vars));
 }
 
 void push(MAY_AO *vm, int value) {
@@ -125,115 +165,177 @@ void OP_BO(MAY_AO *vm, int operand) {
   pop(vm);
 }
 void OP_IN(MAY_AO *vm) {
+  // Deprecated: printing is handled by OP_IN_WITH_OPERAND(vm, operand).
+  // Kept to avoid breaking old references.
   int value = pop(vm);
   printf("%d\n", value);
 }
-void OP_VAO_TRANG(MAY_AO *vm) {
-  if (vm->is_in_trang ) {
-    printf("Loi: Khong ho tro 'trang' long nhau!\n");
+
+// REPLACE OP_IN with an operand-aware version
+void OP_IN_WITH_OPERAND(MAY_AO *vm, int operand) {
+  if (operand == 0) {
+    int value = pop(vm);
+    printf("%d\n", value);
     return;
   }
+
+  if (operand == 1) {
+    int cmdIndex = pop(vm);
+    if (cmdIndex < 0 || cmdIndex >= vm->program->cmds_size) {
+      printf("Loi: cmdIndex khong hop le!\n");
+      exit(1);
+    }
+
+    // Execute like the shell does: argv[0] only (no args for now).
+    char *argv[2];
+    argv[0] = vm->program->cmds[cmdIndex];
+    argv[1] = NULL;
+
+    job_exec(argv);
+    return;
+  }
+
+  printf("Loi: IN operand khong hop le!\n");
+  exit(1);
+}
+
+void OP_VAO_TRANG(MAY_AO *vm) {
+  if (vm->is_in_trang) {
+    printf("Loi: Khong ho tro 'trang' long nhau!\n");
+    exit(1);
+  }
   vm->is_in_trang = 1;
+
+  // Backup outer state (stack content up to sp + all vars)
   vm->backup_sp = vm->sp;
+  for (int i = 0; i < vm->backup_sp; i++) {
+    vm->backup_stack[i] = vm->stack[i];
+  }
   for (int i = 0; i < 1024; i++) {
     vm->backup_vars[i] = vm->vars[i];
   }
+
+  // Fresh sandbox state
+  vm->sp = 0;
+  for (int i = 0; i < 1024; i++) {
+    vm->vars[i] = 0;
+  }
 }
+
 void OP_RA_TRANG(MAY_AO *vm) {
-  vm->is_in_trang = 0;
-  // Phục hồi trạng thái stack và biến từ trang trước
+  if (!vm->is_in_trang) {
+    // Ignore or treat as error; error is safer.
+    printf("Loi: 'ra_trang' khi khong o trong 'trang'!\n");
+    exit(1);
+  }
+
+  // "Return useful results": if sandbox left something on stack,
+  // bring back the TOP value only.
+  int has_result = (vm->sp > 0);
+  int result = 0;
+  if (has_result) {
+    result = vm->stack[vm->sp - 1];
+  }
+
+  // Restore outer state
   vm->sp = vm->backup_sp;
+  for (int i = 0; i < vm->backup_sp; i++) {
+    vm->stack[i] = vm->backup_stack[i];
+  }
   for (int i = 0; i < 1024; i++) {
     vm->vars[i] = vm->backup_vars[i];
   }
+
+  vm->is_in_trang = 0;
+
+  // Push returned result onto outer stack (default 0).
+  push(vm, result);
 }
 void run(MAY_AO *vm) {
   while (vm->pc < vm->program->code_size) {
     CHI_DAN instruction = vm->program->code[vm->pc];
-    vm->pc++; // Tăng bộ đếm chương trình trước khi thực thi
+    vm->pc++;
     switch (instruction.opcode) {
-    case CONG:
-      OP_CONG(vm);
-      break;
-    case TRU:
-      OP_TRU(vm);
-      break;
-    case NHAN:
-      OP_NHAN(vm);
-      break;
-    case CHIA:
-      OP_CHIA(vm);
-      break;
-    case BANG:
-      OP_BANG(vm);
-      break;
-    case LON:
-      OP_LON(vm);
-      break;
-    case NHO:
-      OP_NHO(vm);
-      break;
-    case NHAY:
-      OP_NHAY(vm, instruction.operand);
-      break;
-    case NNS:
-      OP_NNS(vm, instruction.operand);
-      break;
-    case CAT:
-      OP_CAT(vm, instruction.operand);
-      break;
-    case LAY:
-      OP_LAY(vm, instruction.operand);
-      break;
-    case NAP:
-      OP_NAP(vm, instruction.operand);
-      break;
-    case BO:
-      OP_BO(vm, instruction.operand);
-      break;
-    case IN:
-      OP_IN(vm);
-      break;
-    case DUNG:
-      return;
-      break;
-    case VAO_TRANG:
-      OP_VAO_TRANG(vm);
-      break;
-    case RA_TRANG:
-      OP_RA_TRANG(vm);
-      break;
-    default:
-      printf("Loi: Lenh khong hop le!\n");
-      exit(1);
+      case CONG:
+        OP_CONG(vm);
+        break;
+      case TRU:
+        OP_TRU(vm);
+        break;
+      case NHAN:
+        OP_NHAN(vm);
+        break;
+      case CHIA:
+        OP_CHIA(vm);
+        break;
+      case BANG:
+        OP_BANG(vm);
+        break;
+      case LON:
+        OP_LON(vm);
+        break;
+      case NHO:
+        OP_NHO(vm);
+        break;
+      case NHAY:
+        OP_NHAY(vm, instruction.operand);
+        break;
+      case NNS:
+        OP_NNS(vm, instruction.operand);
+        break;
+      case CAT:
+        OP_CAT(vm, instruction.operand);
+        break;
+      case LAY:
+        OP_LAY(vm, instruction.operand);
+        break;
+      case NAP:
+        OP_NAP(vm, instruction.operand);
+        break;
+      case BO:
+        OP_BO(vm, instruction.operand);
+        break;
+      case IN:
+        OP_IN_WITH_OPERAND(vm, instruction.operand);
+        break;
+      case DUNG:
+        return;
+      case VAO_TRANG:
+        OP_VAO_TRANG(vm);
+        break;
+      case RA_TRANG:
+        OP_RA_TRANG(vm);
+        break;
+      default:
+        printf("Loi: Lenh khong hop le! opcode=%d operand=%d pc=%d\n",
+               (int)instruction.opcode, instruction.operand, vm->pc - 1);
+        exit(1);
     }
   }
 }
+
+// Standalone test driver: keep it, but don't compile into thinsh by default.
+#ifdef TINY_VM_STANDALONE_MAIN
 int main() {
     printf("--- KHOI TAO MAY AO ---\n");
 
-    // 1. Khởi tạo chương trình
     CHUONG_TRINH prog;
     init_CHUONG_TRINH(&prog);
 
-    // 2. Load code từ file "code.txt"
-    // Lưu ý: Đảm bảo file code.txt nằm cùng thư mục khi chạy
     load_program(&prog, "code.txt");
     printf("-> Da load %d lenh.\n", prog.code_size);
 
-    // 3. Khởi tạo VM và nạp chương trình vào
     MAY_AO vm;
     init_MAY_AO(&vm, &prog);
 
-    // 4. Chạy
     printf("--- KET QUA CHAY ---\n");
     run(&vm);
-    
+
     printf("--- KET THUC ---\n");
 
-    // 5. Dọn dẹp bộ nhớ (tốt cho thói quen)
     if (prog.code) free(prog.code);
     if (prog.constants) free(prog.constants);
 
     return 0;
 }
+#endif

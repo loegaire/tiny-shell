@@ -1,5 +1,4 @@
 #include "../include/shell.h"
-#include <readline/history.h>
 
 // --- Wrappers ---
 
@@ -33,24 +32,37 @@ int builtin_cd(char **args){
 }
 
 int builtin_history(char **args){
+    #ifdef USE_READLINE
     HIST_ENTRY **list = history_list();
     if(list==NULL) return -1;
     for(int i=0;list[i]!=NULL;i++){
         printf("%d %s\n",i,list[i]->line);
     }
     return 1;
+    #else
+    (void)args;
+    printf("history: readline chua duoc bat (build voi USE_READLINE=1).\n");
+    return 1;
+    #endif
 }
+
+// Trang builtin (implemented in src/trang_builtin.c)
+int builtin_trang(char **args);
 
 // --- THE LOOKUP TABLE ---
 // Register new commands here!
 BuiltinCmd builtins[] = {
     // NAME    FUNCTION
-    {"set",  set_env},      
+    {"set",  set_env},
     {"exit", builtin_exit},
     {"help", builtin_help},
     {"cd", builtin_cd},
     {"get",  get_env},
     {"history", builtin_history},
+
+    // NEW
+    {"trang", builtin_trang},
+
     {NULL, NULL} 
 };
 

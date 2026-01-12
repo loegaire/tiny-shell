@@ -1,0 +1,207 @@
+# code.trang — capability demo (ints only)
+
+# --- 1) Outer state + basic prints ---
+x = 10
+in x
+
+# --- 2) trang sandbox returns a value; outer x must restore ---
+y = trang
+    x = 999
+    123
+het
+in y
+in x   # must still be 10
+
+# --- 3) Factorial(10) computed inside trang ---
+fact10 = trang
+    n = 10
+    acc = 1
+    i = 1
+    khi i < n + 1 thi
+        acc = acc * i
+        i = i + 1
+    het
+    acc
+het
+in fact10   # 3628800
+
+# --- 4) Fibonacci(20) computed inside trang (returns F20 = 6765 with this loop) ---
+fib20 = trang
+    n = 20
+    a = 0
+    b = 1
+    i = 0
+    khi i < n thi
+        t = a + b
+        a = b
+        b = t
+        i = i + 1
+    het
+    a
+het
+in fib20
+
+# --- 5) Conditional-return behavior inside trang ---
+# If condition is false, the sandbox return should fall back to 0 (depends on your TRANG_RET_SLOT init).
+z = trang
+    a = 5
+    neu a > 20 thi a + 1 het
+het
+in z
+
+# --- 6) Outer while-loop doing arithmetic + conditionals ---
+i = 0
+sumSquares = 0
+sumPoly = 0
+
+khi i < 50 thi
+    # squares
+    sumSquares = sumSquares + (i * i)
+
+    # polynomial: i*i + 3*i + 7
+    sumPoly = sumPoly + (i * i) + (3 * i) + 7
+
+    # print a few early values only
+    neu i < 5 thi
+        in i
+        in (i * i)
+    het
+
+    i = i + 1
+het
+
+in sumSquares
+in sumPoly
+
+# --- 7) Another sandbox: compute a checksum-like value in isolation ---
+chk = trang
+    a = 17
+    b = 31
+    c = (a * a) + (b * 3) - 7
+    c
+het
+in chk
+
+# --- 8) GCD demo using trang ---
+a = 1071
+b = 462
+
+g = trang
+    x = a
+    y = b
+
+    khi y > 0 thi
+        q = x / y
+        r = x - (q * y)
+        x = y
+        y = r
+    het
+
+    x
+het
+
+in a
+in b
+in g
+
+# --- 9) Heartbeat-like demo: score computation + sandbox return ---
+i = 0
+x = 10
+sum = 0
+
+khi i < 10 thi
+    date
+    pwd
+    in i
+
+    score = trang
+        # scratch variables only exist in here
+        t = i * i
+        neu t > 20 thi t + x het
+        # if the if didn't run, return value stays 0 (per TRANG_RET_SLOT init)
+        # make sure we always return something useful:
+        t + x
+    het
+
+    in score
+    sum = sum + score
+
+    i = i + 1
+het
+
+in sum
+
+# --- 10) Collatz-like demo: steps computation in trang ---
+n0 = 27
+
+steps = trang
+    n = n0
+    s = 0
+    khi n > 1 thi
+        # if n is even: n = n/2 else n = 3n+1
+        q = n / 2
+        r = n - (q * 2)
+
+        neu r == 0 thi
+            n = q
+        het
+
+        neu r > 0 thi
+            n = (3 * n) + 1
+        het
+
+        s = s + 1
+    het
+    s
+het
+
+in n0
+in steps
+
+# --- 11) Transaction-like demo: conditional state update in trang ---
+balance = 1000
+amount = 275
+
+newBalance = trang
+    b = balance
+    fee = 3
+    tentative = b - amount - fee
+
+    # If tentative < 0, return original balance (reject)
+    neu tentative < 0 thi b het
+
+    # otherwise accept
+    tentative
+het
+
+balance = newBalance
+in balance
+
+# fib_checkpoints.trang
+whoami
+
+n = 25
+i = 0
+a = 0
+b = 1
+
+khi i < n thi
+    t = a + b
+    a = b
+    b = t
+
+    # print first few and last few
+    neu i < 5 thi
+        in i
+        in a
+    het
+
+    neu i > 20 thi
+        in i
+        in a
+    het
+
+    i = i + 1
+het
+
+in a

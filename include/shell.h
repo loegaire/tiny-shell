@@ -12,8 +12,13 @@
 #include <fcntl.h>   // For file operations
 #include <signal.h>  // For signal handling
 #include <stdint.h>
+
+// Optional dependency: readline (command-line editing + history)
+// Build with USE_READLINE=1 to enable.
+#ifdef USE_READLINE
 #include <readline/readline.h>
 #include <readline/history.h>
+#endif
 
 // --- Constants ---
 #define MAX_LINE 256
