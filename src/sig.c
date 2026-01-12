@@ -7,4 +7,5 @@ void sig_handler(int sig){
 void setup_signals(){
     signal(SIGINT, sig_handler);
     signal(SIGTSTP, SIG_IGN);
+    signal(SIGTTOU, SIG_IGN);
 }
