@@ -5,13 +5,15 @@ int main() {
     char *argv[MAX_ARGS];
 
     #ifdef USE_READLINE
-    rl_catch_signals = 0;
+    rl_catch_signals = 0; 
     #endif
 
     setup_signals();
 
     while (1) {
         #ifdef USE_READLINE
+        input = readline("thinsh> ");
+        if (input && *input) add_history(input);
         #else
         char buf[MAX_LINE];
         fputs("thinsh> ", stdout);
