@@ -22,7 +22,7 @@
 - Cú pháp kết thúc lệnh bằng `;` hoặc xuống dòng.
 - Tập lệnh mẫu: [code.trang](code.trang), [test.trang](test.trang), [test_trang_return.trang](test_trang_return.trang), [while.trang](while.trang).
 ### Trang-lang documentation
-- Xem đầy đủ tại: `- https://loegaire.github.io/trang-lang-docs/`
+- Xem đầy đủ tại: https://loegaire.github.io/trang-lang-docs/
 ## Kiến trúc VM và compiler
 - Compiler (`src/compiler.c`): lexer/parser cho từ khóa: `neu/thi/het/khi/trang/in`, toán tử, biến/số.
 - Bảng ký hiệu tối đa 1023 biến; slot 1023 dành cho giá trị trả về của `trang`.
