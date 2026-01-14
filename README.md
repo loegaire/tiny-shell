@@ -9,10 +9,10 @@
 - Quản lý job: thêm vào bảng job, resume/stop, kill bằng lệnh hệ (ps/kill) hoặc `fg`.
 - Biến môi trường riêng: lưu trong `env.txt` qua `set`/`get` (độc lập với bash).
 
-## Ngôn ngữ scripting “trang”
+## Ngôn ngữ kịch bản “trang”
 - Biến số nguyên, gán: `x = 10`.
 - Biểu thức: + - * /, so sánh `< > ==`.
-- Câu lệnh in: `in <expr>`.
+- Câu lệnh in: `in expr`.
 - Rẽ nhánh: `neu <expr> thi ... het`.
 - Vòng lặp: `khi <expr> thi ... het` (while).
 - Khối sandbox `trang ... het`:
@@ -21,8 +21,7 @@
 - Gọi lệnh hệ trong script: dòng đơn từ khóa (vd. `date`, `pwd`) biên dịch thành cmd và thực thi.
 - Cú pháp kết thúc lệnh bằng `;` hoặc xuống dòng.
 - Tập lệnh mẫu: [code.trang](code.trang), [test.trang](test.trang), [test_trang_return.trang](test_trang_return.trang), [while.trang](while.trang).
-### Trang-lang documentation
-- Xem đầy đủ tại: https://loegaire.github.io/trang-lang-docs/
+
 ## Kiến trúc VM và compiler
 - Compiler (`src/compiler.c`): lexer/parser cho từ khóa: `neu/thi/het/khi/trang/in`, toán tử, biến/số.
 - Bảng ký hiệu tối đa 1023 biến; slot 1023 dành cho giá trị trả về của `trang`.
