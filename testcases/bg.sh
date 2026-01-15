@@ -1,0 +1,10 @@
+echo ">>> TEST 1: START BACKGROUND SLEEP"
+sleep 2 &
+
+echo ">>> TEST 2: CHECK PROCESS LIST (should see sleep)"
+ps
+
+echo ">>> TEST 3: WAIT FOR SLEEP TO FINISH"
+sleep 3
+echo "Done"
+exit

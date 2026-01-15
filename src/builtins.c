@@ -27,7 +27,7 @@ int builtin_cd(char **args){
         target=getenv("HOME");
     } 
     else target=args[1]; 
-    chdir(target);
+    chdir(target); //syscall
     return 1;
 }
 
