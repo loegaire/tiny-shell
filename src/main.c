@@ -5,7 +5,7 @@ int main() {
     char *argv[MAX_ARGS];
 
     #ifdef USE_READLINE
-    rl_catch_signals = 0; 
+    rl_catch_signals = 0; // from GNU Readline 
     #endif
 
     setup_signals();
