@@ -94,7 +94,8 @@ int job_exec(char **args){
         sigemptyset(&sigs);
         sigaddset(&sigs, SIGTSTP);
         sigprocmask(SIG_UNBLOCK, &sigs, NULL);        
-        execvp(args[0], args);
+        // syscall wrapper, creates new env for child process and ignores its below lines if success.
+        execvp(args[0], args); 
         perror("Execution failed"); 
         exit(1);
     } 
