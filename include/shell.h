@@ -48,4 +48,6 @@ int get_env(char **args);    // Handles 'get' command
 void setup_signals();
 int job_exec(char **args);
 
+int builtin_source(char **args);
+
 #endif

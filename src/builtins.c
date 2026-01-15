@@ -46,6 +46,38 @@ int builtin_history(char **args){
     #endif
 }
 
+int builtin_source(char **args) {
+    if (args[1] == NULL) {
+        printf("Sử dụng: source <tên_file>\n");
+        return 1;
+    }
+    FILE *fp = fopen(args[1], "r");
+    if (fp == NULL) {
+        perror("Không thể mở file");
+        return 1;
+    }
+    char line[MAX_LINE];
+    while (fgets(line, sizeof(line), fp)) {
+        line[strcspn(line, "\n")] = 0;
+        if (line[0] == '\0' || line[0] == '#') continue;
+        char *local_argv[MAX_ARGS];
+        int i = 0;
+        char *tmp_line = strdup(line); 
+        local_argv[i] = strtok(tmp_line, " ");
+        while (local_argv[i] != NULL && i < MAX_ARGS - 1) {
+            local_argv[++i] = strtok(NULL, " ");
+        }
+        if (local_argv[0] != NULL) {
+            if (!exec_builtin(local_argv)) {
+                job_exec(local_argv);
+            }
+        }
+        free(tmp_line);
+    }
+    fclose(fp);
+    return 1;
+}
+
 // Trang builtin (implemented in src/trang_builtin.c)
 int builtin_trang(char **args);
 
@@ -59,8 +91,7 @@ BuiltinCmd builtins[] = {
     {"cd", builtin_cd},
     {"get",  get_env},
     {"history", builtin_history},
-
-    // NEW
+    {"source", builtin_source},
     {"trang", builtin_trang},
 
     {NULL, NULL} 
