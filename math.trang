@@ -1,0 +1,25 @@
+n = 25
+i = 0
+a = 0
+b = 1
+
+khi i < n thi
+    t = a + b
+    a = b
+    b = t
+
+    # In một vài giá trị đầu và cuối
+    neu i < 5 thi
+        in i
+        in a
+    het
+
+    neu i > 20 thi
+        in i
+        in a
+    het
+
+    i = i + 1
+het
+
+in a  # F(25) = 75025

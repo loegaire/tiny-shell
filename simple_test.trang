@@ -1,0 +1,7 @@
+#in output cua lenh date ra 10 lan
+x = 10
+khi x > 0 thi
+date
+x = x - 1
+het
+
