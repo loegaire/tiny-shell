@@ -1,18 +1,14 @@
-# --- TEST 1: HELPER COMMANDS ---
-echo ">>> [1/5] Testing HELP and HISTORY"
+echo " ---- help ----"
 help
+echo " ---- history ----"
 history
 
-# --- TEST 2: ENVIRONMENT VARIABLES ---
-echo ">>> [2/5] Testing SET/GET Env Vars"
-# Gán biến mới
-set MY_DEMO_VAR thinsh_is_awesome
-# Lấy giá trị vừa gán
-get MY_DEMO_VAR
+echo " ---- set myvar thinsh_is_awesome ---- "
+set myvar thinsh_is_awesome
+echo " ---- get myvar ---- "
+get myvar
 
-# --- TEST 3: NAVIGATION (CD) ---
-echo ">>> [3/5] Testing Directory Navigation"
-echo "Current directory:"
+echo " ---- pwd ---- "
 pwd
 echo "Go up one level (cd ..):"
 cd ..
@@ -21,13 +17,12 @@ echo "Go back home (cd):"
 cd
 pwd
 
-# --- TEST 4: EXTERNAL COMMANDS ---
-echo ">>> [4/5] Testing External Commands"
+echo "Testing External Commands"
+echo " ---- date ---- "
 date
-ls -F
+echo " ---- ls ---- "
+ls 
 
-# --- TEST 5: ERROR HANDLING ---
-echo ">>> [5/5] Testing Invalid Command (Should show error)"
-non_existent_command_123
-
-echo ">>> BASIC TEST COMPLETED!"
+echo "Testing invalid command"
+echo " ---- invalid ---- "
+invalid

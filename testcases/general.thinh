@@ -1,6 +1,0 @@
-echo ">>> TEST 1: HELP COMMAND"
-help
-
-echo ">>> TEST 2: EXTERNAL COMMANDS (date, ls)"
-date
-ls
