@@ -1,9 +1,9 @@
 echo ">>> TEST 1: START BACKGROUND SLEEP"
-sleep 2 &
+sleep 3 &
 
-echo ">>> TEST 2: CHECK PROCESS LIST (should see sleep)"
+echo ">>> TEST 2: CHECK PROCESS LIST"
 ps
 
 echo ">>> TEST 3: WAIT FOR SLEEP TO FINISH"
-sleep 3
+sleep 5
 echo "Done"

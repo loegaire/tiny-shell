@@ -1,0 +1,28 @@
+echo " ---- help ----"
+help
+echo " ---- history ----"
+history
+
+echo " ---- set myvar thinsh_is_awesome ---- "
+set myvar thinsh_is_awesome
+echo " ---- get myvar ---- "
+get myvar
+
+echo " ---- pwd ---- "
+pwd
+echo "Go up one level (cd ..):"
+cd ..
+pwd
+echo "Go back home (cd):"
+cd
+pwd
+
+echo "Testing External Commands"
+echo " ---- date ---- "
+date
+echo " ---- ls ---- "
+ls 
+
+echo "Testing invalid command"
+echo " ---- invalid ---- "
+invalid
