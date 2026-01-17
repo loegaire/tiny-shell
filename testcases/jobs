@@ -6,4 +6,3 @@ ps
 
 echo ">>> TEST 3: WAIT FOR SLEEP TO FINISH"
 sleep 5
-echo "Done"
